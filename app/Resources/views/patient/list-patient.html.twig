@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="margin-top: 20px"></div>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-md-offset-0">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search_input" placeholder="Wyszukaj...">
+                <span class="input-group-btn">
+                <button class="btn btn-info" id="search_button" type="button"><i class="fa fa-search"></i></button>
+            </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div style="margin-top: 40px"></div>
+        <div class="col-lg-10 col-lg-offset-1">
+            <table id="serchTable" class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Płeć</th>
+                    <th>Miejscowość</th>
+                    <th>Telefon</th>
+                    <th class="no-sort">Akcja</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Jan</td>
+                    <td>Nowak</td>
+                    <td>Meżczyzna</td>
+                    <td>Testowa</td>
+                    <td>111111111</td>
+                    <td><a href="#" data-toggle="tooltip" class="tooltips" title="Karta pacjenta"><i class="fa fa-address-book fa-2x"></i></a></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Barbara</td>
+                    <td>Struś</td>
+                    <td>Kobieta</td>
+                    <td>Kraków</td>
+                    <td>222222</td>
+                    <td><a href="#" data-toggle="tooltip" class="tooltips" title="Karta pacjenta"><i class="fa fa-address-book fa-2x"></i></a></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Zbigniew</td>
+                    <td>Kowalski</td>
+                    <td>Meżczyzna</td>
+                    <td>Nowy Targ</td>
+                    <td>1236789</td>
+                    <td><a href="#" data-toggle="tooltip" class="tooltips" title="Karta pacjenta"><i class="fa fa-address-book fa-2x"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        var dataTable;
+        var lastSearch;
+
+        function tableSearch(table) {
+            var text = $("#search_input").val();
+
+            if (text.length > 2) {
+                table.search(text).draw();
+            } else if (text.length == 0 && lastSearch != "") {
+                table.search("").draw();
+            }
+            lastSearch = text;
+        }
+        $(document).ready(function () {
+            dataTable = $("#serchTable").DataTable({
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ rekordów na stronę",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "Brak rekordów",
+                    "infoFiltered": "(z _MAX_ wszystkich)",
+                    "paginate": {
+                        "previous": "Poprzednia",
+                        "next": "Następna"
+                    }
+                },
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false,
+                } ]
+            });
+            $("#serchTable_filter").css("display", "none");
+
+            $("#search_button").on("click", function () {
+                tableSearch(dataTable);
+            });
+            $("#search_input").on("keyup", function () {
+                tableSearch(dataTable);
+            });
+
+            $(".tooltips").tooltip();
+        });
+    </script>
+{% endblock %}
