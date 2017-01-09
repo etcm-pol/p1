@@ -19,9 +19,6 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $route = $request->attributes->get("_route");
-        return $this->render("default/index.html.twig", [
-            "route" => $route
-        ]);
+        return $this->render("default/index.html.twig");
     }
 }

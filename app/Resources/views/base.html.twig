@@ -2,10 +2,15 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}TCM!{% endblock %}</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% javascripts
+    '@AppBundle/Resources/js/jquery/*'
+    %}
+    <script src="{{ asset_url }}" type="text/javascript"></script>
+    {% endjavascripts %}
     {% stylesheets
     '@AppBundle/Resources/css/bootstrap/bootstrap.css'
     '@AppBundle/Resources/css/bootstrap/bootstrap-theme.css'
@@ -23,6 +28,9 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body>
+<div class="page-loader">
+    <div class="page-loader-progress"></div>
+</div>
 <div class="site">
     <nav class="navbar navbar-fixed-top">
         <div class="container">
@@ -59,21 +67,21 @@
     </nav>
     <div class="page-sidebar navbar-collapse collapse" aria-expanded="false">
         <ul class="page-sidebar-menu page-header-fixed page-sidebar-menu-hover-submenu" data-keep-expanded="false">
-            <li class="nav-item {% if route == "app_index" %}active{% endif %}">
+            <li class="nav-item {% if "app_index" in app.request.attributes.get('_route') %}active{% endif %}">
                 <a href="{{ path("app_index") }}" class="nav-link nav-toggle">
                     <i class="fa fa-home fa-2x"></i> Dashboard
                 </a>
             </li>
-            <li class="nav-item {% if route == "patient_new_form" or route == "patient_list" %}active{% endif %}">
+            <li class="nav-item {% if "patient_new_form" in app.request.attributes.get('_route') or "patient_list" in app.request.attributes.get('_route') %}active{% endif %}">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="fa fa-group fa-2x"></i> Pacjenci
                 </a>
                 <ul class="sub-menu collapse" aria-expanded="false">
                     <li class="nav-item">
-                        <a href="{{ path("patient_new_form") }}">Dodaj nowego</a>
+                        <a href="{{ path("patient_new_form_ajax") }}" class="ajax-link">Dodaj nowego</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ path("patient_list") }}">Podgląd, edycja</a>
+                        <a href="{{ path("patient_list_ajax") }}" class="ajax-link ajax-reload">Podgląd, edycja</a>
                     </li>
                 </ul>
             </li>
@@ -84,34 +92,39 @@
             </li>
             <li class="nav-item">
                 <a href="/" class="nav-link nav-toggle">
-                    <i class="fa fa-calendar-o fa-2x"></i> Wizyty
+                    <i class="fa fa-calendar fa-2x"></i> Kalendarz
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/" class="nav-link nav-toggle">
-                    <i class="fa fa-info-circle fa-2x"></i> Raporty
+                    <i class="fa fa-pie-chart fa-2x"></i> Ankiety
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/" class="nav-link nav-toggle">
-                    <i class="fa fa-stethoscope fa-2x"></i> Diagnoza
+                    <i class="fa fa-info-circle fa-2x"></i> Porady
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/" class="nav-link nav-toggle">
-                    <i class="fa fa-asterisk fa-2x"></i> Akupunktura
+                    <i class="fa fa-euro fa-2x"></i> Płatności
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/" class="nav-link nav-toggle">
-                    <i class="fa fa-envira fa-2x"></i> Zioła
+                    <i class="fa fa-bar-chart fa-2x"></i> Statystyki
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/" class="nav-link nav-toggle">
+                    <i class="fa fa-wrench fa-2x"></i> Szablony
                 </a>
             </li>
         </ul>
     </div>
     <div class="page-content-wrapper">
         <div class="page-content">
-            <div class="container" style="padding-top: 10px;">
+            <div class="container" id="page-content" style="padding-top: 10px;">
                 {% block body %}{% endblock %}
             </div>
         </div>
@@ -124,11 +137,10 @@
 </footer>
 
 {% javascripts
-'@AppBundle/Resources/js/jquery/*'
 '@AppBundle/Resources/js/bootstrap/bootstrap.min.js'
-'@AppBundle/Resources/js/jquery/jquery-ui.min.js'
 '@AppBundle/Resources/js/select2/select2.min.js'
 '@AppBundle/Resources/js/global/main.js'
+'@AppBundle/Resources/js/patient/list-patient.js'
 %}
 <script src="{{ asset_url }}" type="text/javascript"></script>
 {% endjavascripts %}

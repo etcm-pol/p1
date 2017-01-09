@@ -17,22 +17,18 @@ class PatientController extends Controller
 {
     /**
      * @Route("/patient/new", name="patient_new_form")
+     * @Route("/ajax/patient/new", name="patient_new_form_ajax")
      */
     public function getFormAction(Request $request)
     {
-        $route = $request->attributes->get("_route");
-        return $this->render("patient/new-patient.html.twig", [
-            "route" => $route
-        ]);
+        return $this->render("patient/new-patient.html.twig");
     }
     /**
      * @Route("/patient/list", name="patient_list")
+     * @Route("/ajax/patient/list", name="patient_list_ajax")
      */
     public function getListAction(Request $request)
     {
-        $route = $request->attributes->get("_route");
-        return $this->render("patient/list-patient.html.twig", [
-            "route" => $route
-        ]);
+        return $this->render("patient/list-patient.html.twig");
     }
 }
